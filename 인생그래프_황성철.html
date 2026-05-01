@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>황성철 라이프라인 — Scout의 여정</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: linear-gradient(135deg, #F7F9FC 0%, #EEF2FF 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+      color: #2C3E50;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header .scout-badge {
+      display: inline-block;
+      background: #1a237e;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #1a237e;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 13px;
+      color: #90A4AE;
+      font-weight: 300;
+    }
+
+    /* LEGEND */
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #546E7A;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* GRAPH CARD */
+    .graph-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(26, 35, 126, 0.1);
+      padding: 32px 28px 24px;
+      width: 100%;
+      max-width: 1120px;
+      margin-bottom: 20px;
+    }
+    .graph-card svg {
+      width: 100%;
+      display: block;
+      overflow: visible;
+    }
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: #B0BEC5;
+      margin-top: 14px;
+    }
+
+    /* DETAIL PANEL */
+    .detail-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(26, 35, 126, 0.1);
+      padding: 28px 36px;
+      width: 100%;
+      max-width: 1120px;
+      min-height: 130px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      transition: opacity 0.3s ease;
+    }
+    .detail-card.init { opacity: 0.45; }
+    .age-block {
+      text-align: center;
+      min-width: 72px;
+    }
+    .age-number {
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1;
+      color: #1a237e;
+    }
+    .age-unit {
+      font-size: 14px;
+      color: #90A4AE;
+      font-weight: 300;
+    }
+    .detail-body h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .detail-body p {
+      font-size: 14px;
+      color: #546E7A;
+      line-height: 1.9;
+      white-space: pre-line;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 36px;
+      text-align: center;
+      font-size: 12px;
+      color: #B0BEC5;
+      max-width: 600px;
+      line-height: 1.7;
+    }
+    .footer strong { color: #78909C; font-weight: 700; }
+
+    /* DOT HOVER */
+    .event-dot { cursor: pointer; transition: r 0.15s ease; }
+    .event-dot:hover { filter: brightness(1.15); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="scout-badge">SCOUT</div>
+  <h1>황성철 라이프라인</h1>
+  <p>나를 만들어온 순간들의 지도 &nbsp;|&nbsp; 씽프로젝트 2026</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1565C0"></div>최고의 순간 / 순수한 기쁨</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2E7D32"></div>성장 / 연결</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6A1B9A"></div>전환점 / 통찰</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#E65100"></div>좌절 / 충돌</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#B71C1C"></div>시련 / 상실</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#F9A825"></div>지금의 나 (Scout)</div>
+</div>
+
+<div class="graph-card">
+  <svg id="lifeline" viewBox="0 0 1050 520"></svg>
+  <p class="hint">● 점을 클릭하면 그 순간의 이야기를 볼 수 있어요</p>
+</div>
+
+<div class="detail-card init" id="detailCard">
+  <div class="age-block">
+    <div class="age-number" id="dAge">—</div>
+    <div class="age-unit" id="dUnit">살</div>
+  </div>
+  <div class="detail-body">
+    <h2 id="dTitle" style="color:#1a237e">점을 클릭해서 그 순간을 살펴보세요</h2>
+    <p id="dDesc">각 점에는 황성철의 이야기가 담겨 있습니다.</p>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Scout</strong><br>
+  낯선 환경에 먼저 들어가 길을 찾고,<br>
+  그 경험으로 다음 사람의 방향을 설계해주는 사람
+</div>
+
+<script>
+const EVENTS = [
+  {
+    age: 4, energy: -5, label: "차에 치이다",
+    desc: "어른들은 과자만 주고 떠났다.\n부모님은 '사람을 믿지 말라'고 했다.\n→ 세상에 대한 첫 번째 의심이 생겼다.",
+    cat: "hardship", labelPos: "below"
+  },
+  {
+    age: 8, energy: -2, label: "8살의 포옹",
+    desc: "좋아하는 친구에게 포옹했지만 상대가 기뻐보이지 않았다.\n내 감정이 상대에게 그대로 닿지 않는다는 것을 처음 느꼈다.\n→ 이때부터 사람을 관찰하는 습관이 생겼다.",
+    cat: "insight", labelPos: "below"
+  },
+  {
+    age: 13, energy: 3, label: "부회장 선거",
+    desc: "전교 회장 선거에서 5표 차이로 부회장이 됐다.\n무대에 설 수 있다는 가능성을 처음 느꼈다.\n→ 아쉬움이 동력이 된다는 것을 배웠다.",
+    cat: "growth", labelPos: "above"
+  },
+  {
+    age: 15, energy: 5, label: "전교 36등",
+    desc: "밤새 공부해 달성한 성적.\n하는 만큼 나온다 —\n→ 노력과 결과 사이의 직선을 처음 발견했다.",
+    cat: "achievement", labelPos: "above"
+  },
+  {
+    age: 16, energy: 7, label: "농구 몰입 ★",
+    desc: "학교가 끝나도 밤늦게까지 코트에 있었다.\n순수한 즐거움, 팀으로 움직이는 감각.\n→ 몰입이 뭔지 알게 된 순간이었다.",
+    cat: "joy", labelPos: "above"
+  },
+  {
+    age: 18, energy: -4, label: "코치 선생님 사망",
+    desc: "체대 입시 중, 존경하는 코치 선생님이 교통사고로 갑자기 세상을 떠났다.\n눈물이 나지 않았다. 멍했다.\n→ 감정을 처리하는 방식에 대한 의문이 생겼다.",
+    cat: "loss", labelPos: "below"
+  },
+  {
+    age: 19, energy: -7, label: "연골연화증\n체대 포기",
+    desc: "더 이상 격한 운동을 할 수 없게 됐다.\n→ 내가 원해도 안 될 수 있다.\n의지와 현실 사이의 첫 번째 충돌이었다.",
+    cat: "hardship", labelPos: "below"
+  },
+  {
+    age: 21, energy: 4, label: "디자인과 입학",
+    desc: "재수 끝에 디지털 산업디자인과 입학.\n미술 출신들 사이에서 컴퓨터 디자인과 발표로 두각을 나타냈다.\n→ 나는 나만의 방식으로 잘하면 된다.",
+    cat: "rebirth", labelPos: "above"
+  },
+  {
+    age: 22, energy: 2, label: "군 복무 + 평생 친구",
+    desc: "20개월 군 복무. 공동체 생활이 낯설었지만,\n교회에서 평생 친구를 얻었다.\n→ 소속되지 않아도 연결될 수 있다.",
+    cat: "connection", labelPos: "above"
+  },
+  {
+    age: 24, energy: 4, label: "유기견 봉사 동아리",
+    desc: "복학 후 다양한 4년제 대학생들과 교류했다.\n생각 깊은 사람이 재미있다.\n→ 인생을 유익하게 써야겠다는 방향감각이 생겼다.",
+    cat: "connection", labelPos: "above"
+  },
+  {
+    age: 25, energy: -3, label: "교수와 갈등",
+    desc: "'왜 뻔한 것만 만들어야 하냐'고 질문했다가 학교생활이 힘들어졌다. 취업계로 졸업.\n→ 권위가 항상 옳지 않다.\n질문 자체가 틀리지 않았지만, 맥락을 읽어야 한다는 것도 배웠다.",
+    cat: "friction", labelPos: "below"
+  },
+  {
+    age: 26, energy: 3, label: "밴드 마일트리\n+ 대학원 입학",
+    desc: "밴드 '마일트리' 결성. 여의도 한강 불꽃축제 공연.\n홍익대 국제대학원 합격 — 새 출발.\n대학원 스토리 모임(500명) 운영진을 맡았다.",
+    cat: "growth", labelPos: "above"
+  },
+  {
+    age: 27, energy: -5, label: "배신",
+    desc: "대학원에서 믿었던 동기에게 배신당했다.\n또다시 '사람을 믿으면 안 된다'는 결론.\n→ 하지만 동시에 스스로 해결하는 힘이 길러졌다.",
+    cat: "hardship", labelPos: "below"
+  },
+  {
+    age: 28, energy: 2, label: "건축회사\n소속 밖 연결",
+    desc: "계약직 3개월 근무. 퇴사할 때 다른 부서 사람들이 송별회를 열어줬다.\n→ 공식 소속이 아닌 사람들과 연결되는 감각.\n내 방식의 관계를 만들 수 있다는 것을 알았다.",
+    cat: "connection", labelPos: "above"
+  },
+  {
+    age: 29, energy: 9, label: "UCSD 어학연수 ★",
+    desc: "코로나 시기, 미국 UC 샌디에고 어학연수.\n인생에서 가장 행복했던 시간.\n케이시린이 끓여준 첫날 라면, 다국적 친구들, 식당 앞 총격 사건.\n→ 낯선 것이 위험이 아니라 가능성이다.",
+    cat: "peak", labelPos: "above"
+  },
+  {
+    age: 30, energy: -4, label: "핀란드 박사 실패",
+    desc: "2년간 아이엘츠 6번 도전. 성적은 만들었지만\n유럽 교수들에게 답장이 오지 않았다.\n→ 또 한번, 뜻대로 되지 않는다.\n그러나 통역과 프리랜서로 자립 가능성을 확인했다.",
+    cat: "setback", labelPos: "below"
+  },
+  {
+    age: 30.5, energy: 5, label: "레고랜드 통역",
+    desc: "닌자고 라이브쇼. 한 달간 강원도 춘천 파견 동시통역.\n미국인 감독 ↔ 한국인 인형연기자 사이를 연결했다.\n→ '내가 여기 있어서 풀렸다'는 감각.\n두 세계를 연결했을 때의 기쁨이었다.",
+    cat: "meaningful", labelPos: "above"
+  },
+  {
+    age: 32, energy: 4, label: "AI 발견\n+ 공간기획",
+    desc: "방황하면서 AI를 만났다.\n내 디자인의 약점을 AI가 보완해줄 수 있다는 것 발견.\n공간기획 프리랜서로 일하면서 스토리텔러로서의 가능성을 처음 느꼈다.",
+    cat: "discovery", labelPos: "above"
+  },
+  {
+    age: 33, energy: -8, label: "1년 왕따",
+    desc: "첫 정규직. 동기 팀장의 뒷담화에 휘말려 1년간 왕따를 당했다.\n그럼에도 1년을 버티고 스스로 나왔다.\n→ 버텼다는 것 자체가 증명이 됐다.\n내가 잘되면 된다.",
+    cat: "hardship", labelPos: "below"
+  },
+  {
+    age: 34, energy: 6, label: "Scout — 지금의 나",
+    desc: "프리랜서 + 씽프로젝트.\n나의 Why를 찾아가는 중.\n→ 아직 완성되지 않았다. 그게 지금의 나.",
+    cat: "now", labelPos: "above"
+  }
+];
+
+const CAT_COLOR = {
+  hardship:    "#B71C1C",
+  loss:        "#C62828",
+  setback:     "#E65100",
+  friction:    "#F57F17",
+  joy:         "#1565C0",
+  peak:        "#0D47A1",
+  achievement: "#2E7D32",
+  connection:  "#00695C",
+  insight:     "#6A1B9A",
+  rebirth:     "#283593",
+  growth:      "#1A237E",
+  meaningful:  "#00838F",
+  discovery:   "#4527A0",
+  now:         "#F9A825"
+};
+
+// ── SVG setup ──
+const VW = 1050, VH = 520;
+const mT = 72, mR = 44, mB = 65, mL = 58;
+const PW = VW - mL - mR;   // 948
+const PH = VH - mT - mB;   // 383
+const AGE_MIN = 4, AGE_MAX = 34;
+const E_MIN = -10, E_MAX = 10;
+
+function xP(age)    { return mL + (age - AGE_MIN) / (AGE_MAX - AGE_MIN) * PW; }
+function yP(energy) { return mT + (E_MAX - energy) / (E_MAX - E_MIN) * PH; }
+
+const svg = document.getElementById('lifeline');
+const NS  = 'http://www.w3.org/2000/svg';
+function el(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  return e;
+}
+function txt(content, attrs) {
+  const t = el('text', attrs);
+  t.textContent = content;
+  return t;
+}
+
+// ── Defs (gradients + clip paths) ──
+const defs = el('defs', {});
+const zeroY = yP(0);
+
+// Positive fill gradient
+const gPos = el('linearGradient', { id: 'gPos', x1: 0, y1: 0, x2: 0, y2: 1 });
+gPos.appendChild(el('stop', { offset: '0%',   'stop-color': '#1565C0', 'stop-opacity': 0.12 }));
+gPos.appendChild(el('stop', { offset: '100%', 'stop-color': '#1565C0', 'stop-opacity': 0.01 }));
+
+// Negative fill gradient
+const gNeg = el('linearGradient', { id: 'gNeg', x1: 0, y1: 1, x2: 0, y2: 0 });
+gNeg.appendChild(el('stop', { offset: '0%',   'stop-color': '#B71C1C', 'stop-opacity': 0.10 }));
+gNeg.appendChild(el('stop', { offset: '100%', 'stop-color': '#B71C1C', 'stop-opacity': 0.01 }));
+
+// Clip paths
+const clipPos = el('clipPath', { id: 'cpPos' });
+clipPos.appendChild(el('rect', { x: mL, y: mT, width: PW, height: zeroY - mT }));
+const clipNeg = el('clipPath', { id: 'cpNeg' });
+clipNeg.appendChild(el('rect', { x: mL, y: zeroY, width: PW, height: PH - (zeroY - mT) }));
+
+defs.appendChild(gPos); defs.appendChild(gNeg);
+defs.appendChild(clipPos); defs.appendChild(clipNeg);
+svg.appendChild(defs);
+
+// ── Background ──
+svg.appendChild(el('rect', { x: 0, y: 0, width: VW, height: VH, fill: '#FAFBFF', rx: 10 }));
+
+// ── Grid ──
+for (let e = -10; e <= 10; e += 2) {
+  const y = yP(e);
+  svg.appendChild(el('line', {
+    x1: mL, y1: y, x2: mL + PW, y2: y,
+    stroke: e === 0 ? '#546E7A' : '#E8EDF5',
+    'stroke-width': e === 0 ? 1.8 : 0.7,
+    'stroke-dasharray': e === 0 ? 'none' : '4,5'
+  }));
+  if (e !== 0) {
+    svg.appendChild(txt(e > 0 ? `+${e}` : `${e}`, {
+      x: mL - 9, y: y + 4,
+      'text-anchor': 'end',
+      'font-size': 10,
+      fill: e > 0 ? '#78909C' : '#EF9A9A'
+    }));
+  }
+}
+svg.appendChild(txt('0', {
+  x: mL - 9, y: zeroY + 4,
+  'text-anchor': 'end', 'font-size': 11, fill: '#546E7A', 'font-weight': 600
+}));
+
+// ── X axis ──
+for (let age = 4; age <= 34; age += 2) {
+  const x = xP(age);
+  svg.appendChild(el('line', { x1: x, y1: mT, x2: x, y2: mT + PH, stroke: '#F0F4FF', 'stroke-width': 0.6 }));
+  svg.appendChild(el('line', { x1: x, y1: mT + PH, x2: x, y2: mT + PH + 5, stroke: '#CFD8DC', 'stroke-width': 1 }));
+  svg.appendChild(txt(`${age}살`, {
+    x, y: mT + PH + 20,
+    'text-anchor': 'middle', 'font-size': 11, fill: '#90A4AE'
+  }));
+}
+
+// ── Axis labels ──
+svg.appendChild(txt('긍정 / 충만 ▲', {
+  x: mL + PW, y: mT - 8,
+  'text-anchor': 'end', 'font-size': 11, fill: '#1565C0', 'font-weight': 600
+}));
+svg.appendChild(txt('▼ 시련 / 어려움', {
+  x: mL + PW, y: mT + PH + 14,
+  'text-anchor': 'end', 'font-size': 11, fill: '#B71C1C', 'font-weight': 600
+}));
+svg.appendChild(txt('나이', {
+  x: mL - 9, y: mT + PH + 20,
+  'text-anchor': 'end', 'font-size': 10, fill: '#90A4AE'
+}));
+
+// ── Smooth curve (Catmull-Rom → Cubic Bezier) ──
+const pts = EVENTS.map(e => [xP(e.age), yP(e.energy)]);
+
+function buildPath(pts) {
+  const d = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(i - 1, 0)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(i + 2, pts.length - 1)];
+    const alpha = 0.5; // tension
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6 * (1 / alpha);
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6 * (1 / alpha);
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6 * (1 / alpha);
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6 * (1 / alpha);
+    if (i === 0) d.push(`M${p1[0].toFixed(1)},${p1[1].toFixed(1)}`);
+    d.push(`C${cp1x.toFixed(1)},${cp1y.toFixed(1)},${cp2x.toFixed(1)},${cp2y.toFixed(1)},${p2[0].toFixed(1)},${p2[1].toFixed(1)}`);
+  }
+  return d.join(' ');
+}
+
+const curvePath = buildPath(pts);
+const firstX = pts[0][0], lastX = pts[pts.length - 1][0];
+const closedPath = `${curvePath} L${lastX},${zeroY} L${firstX},${zeroY} Z`;
+
+// Fill
+svg.appendChild(el('path', { d: closedPath, fill: 'url(#gPos)', 'clip-path': 'url(#cpPos)' }));
+svg.appendChild(el('path', { d: closedPath, fill: 'url(#gNeg)', 'clip-path': 'url(#cpNeg)' }));
+
+// Stroke
+svg.appendChild(el('path', {
+  d: curvePath,
+  fill: 'none',
+  stroke: '#1a237e',
+  'stroke-width': 2.8,
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round'
+}));
+
+// ── Dots + Labels ──
+const card  = document.getElementById('detailCard');
+const dAge  = document.getElementById('dAge');
+const dUnit = document.getElementById('dUnit');
+const dTitle = document.getElementById('dTitle');
+const dDesc  = document.getElementById('dDesc');
+
+// Which events get a visible text label
+const LABELED = new Set([0, 1, 4, 5, 6, 13, 14, 15, 18, 19]);
+// Label line-split events
+const MULTI_LABEL = new Set([6, 11, 15, 17]);
+
+let selectedIdx = -1;
+
+EVENTS.forEach((evt, i) => {
+  const x = xP(evt.age);
+  const y = yP(evt.energy);
+  const color = CAT_COLOR[evt.cat];
+  const isPeak = evt.cat === 'peak' || evt.cat === 'now' || evt.cat === 'joy';
+  const r = isPeak ? 9 : 7;
+
+  // Pulse ring for peak events
+  if (isPeak) {
+    svg.appendChild(el('circle', {
+      cx: x, cy: y, r: 16,
+      fill: 'none',
+      stroke: color,
+      'stroke-width': 1.5,
+      opacity: 0.3
+    }));
+  }
+
+  // Main dot
+  const circle = el('circle', {
+    cx: x, cy: y, r,
+    fill: color,
+    stroke: 'white',
+    'stroke-width': 2.5,
+    class: `event-dot dot-${i}`
+  });
+  svg.appendChild(circle);
+
+  // Text label
+  if (LABELED.has(i)) {
+    const above = evt.labelPos === 'above';
+    const lines = evt.label.split('\n');
+    const baseY = above ? y - (r + 10) : y + (r + 14);
+    lines.forEach((line, li) => {
+      svg.appendChild(txt(line, {
+        x,
+        y: baseY + li * 13 - (lines.length - 1) * 6.5 * (above ? 1 : 0),
+        'text-anchor': 'middle',
+        'font-size': 10,
+        'font-weight': 600,
+        fill: color
+      }));
+    });
+  }
+
+  // Click
+  circle.addEventListener('click', () => {
+    selectedIdx = i;
+    // Reset all
+    document.querySelectorAll('.event-dot').forEach(d => {
+      d.setAttribute('stroke', 'white');
+      d.setAttribute('stroke-width', 2.5);
+    });
+    circle.setAttribute('stroke', '#333');
+    circle.setAttribute('stroke-width', 3.5);
+
+    card.classList.remove('init');
+    dAge.textContent = Math.floor(evt.age);
+    dAge.style.color = color;
+    dUnit.textContent = evt.age % 1 !== 0 ? '살 (중반)' : '살';
+    dTitle.textContent = evt.label.replace('\n', ' ');
+    dTitle.style.color = color;
+    dDesc.textContent = evt.desc;
+  });
+
+  // Hover scale
+  circle.addEventListener('mouseenter', () => { circle.setAttribute('r', r + 3); });
+  circle.addEventListener('mouseleave', () => { circle.setAttribute('r', r); });
+});
+
+// Scout 핵심 문구
+svg.appendChild(txt('인생에서 가장 행복했던 시간', {
+  x: xP(29), y: yP(9) - 26,
+  'text-anchor': 'middle',
+  'font-size': 9.5,
+  fill: '#0D47A1',
+  'font-style': 'italic'
+}));
+svg.appendChild(txt('의지와 현실의 첫 충돌', {
+  x: xP(19), y: yP(-7) + 22,
+  'text-anchor': 'middle',
+  'font-size': 9.5,
+  fill: '#B71C1C',
+  'font-style': 'italic'
+}));
+svg.appendChild(txt('낯선 것이 가능성이다', {
+  x: xP(29), y: yP(9) - 14,
+  'text-anchor': 'middle',
+  'font-size': 9.5,
+  fill: '#0D47A1',
+  'font-style': 'italic',
+  'font-weight': 600
+}));
+</script>
+</body>
+</html>
