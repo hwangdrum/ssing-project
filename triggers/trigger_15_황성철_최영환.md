@@ -51,5 +51,14 @@ M-TREE라는 이름이 겨자나무에서 왔다는 것. 겨자씨는 씨앗 중
 
 **각 기업에서 발견한 것:**
 
+- **Expatica**: 첫 문장이 "Start your journey abroad."였다. 여행이 아니라 여정. 낯선 나라로 이주하는 사람의 출발점이 되겠다는 것. 정보가 없으면 첫 발을 못 딛는다 — 그 시작점을 만들어주는 것이 이 회사의 일이다.
+
+- **Just Landed**: "Everything you need to live abroad — connecting expats worldwide." 정보를 주는 것과 사람을 연결하는 것을 같이 한다. 포럼이 인상적이었다. 이미 거기서 살고 있는 사람과 막 도착한 사람이 같은 공간에 있다. 내가 어학연수에서 했던 것과 구조가 비슷하다. 먼저 온 사람이 방금 도착한 사람 옆에 있는 것.
+
+- **Welcoming America**: "No matter where we came from." 어디서 왔든 지금 이곳이 집이 될 수 있어야 한다. 정보나 연결이 아니라 소속감 — belonging — 을 만드는 것이 이 조직의 일이다. 진입 이후의 이야기를 하는 곳이다.
+
+- **Worldpackers**: "Travel, collaborate, make an impact." 낯선 곳에 들어가는 방식 자체를 바꿨다. 관광객이 아니라 자원봉사자로 들어가면 그 환경 안에서 쓸모가 생긴다. 낯선 환경 진입이 협업의 형태로 바뀔 수 있다는 것.
 
 **오늘 기업들을 보고 나서 내 WHW 업데이트:**
+
+네 회사가 낯선 환경 진입의 각각 다른 지점을 잡고 있었다. 진입 전 정보(Expatica), 진입 직후 연결(Just Landed), 진입 이후 소속감(Welcoming America), 진입 방식 자체를 바꾸는 것(Worldpackers). 나의 WHO — 낯선 환경에 처음 들어선 사람 — 은 이 네 단계를 다 통과한다. 내가 어떤 단계의 막히는 지점을 잡을 것인지가 다음 질문이 됐다.
